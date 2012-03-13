@@ -8,9 +8,10 @@ Development Status
 
 Right now, the plugin is still in early development. I will add more info as it progresses.
 
-Compiling
+Compiling and debugging
 ---------
-Create a _lib_ folder and put _bukkit-1.2.3-R0.2.jar_ in. Then open the project using NetBeans.
+Create a _lib_ folder and put _bukkit-1.2.3-R0.2.jar_ and _craftbukkit-1.2.3-R0.2.jar_ in it. Then open the project using NetBeans.
+Note that Bukkit is required for compiling and CraftBukkit is only used for debugging.
 
 Credits, Greetings and Thanks
 -----------------------------

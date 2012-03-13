@@ -71,4 +71,16 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <!-- Custom rules for easy debugging -->
+    
+    <!-- Copy jar to debug folder -->
+    <target name="-post-jar">
+        <copy file="${dist.jar}" todir="debug/plugins"/>
+    </target>
+    
+    <!-- Delete jar and configs from debug folder on clean -->
+    <target name="-post-clean">
+        <delete dir="debug/plugins"/>
+    </target>
 </project>
