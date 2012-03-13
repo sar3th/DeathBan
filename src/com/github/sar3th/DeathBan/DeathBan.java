@@ -95,7 +95,7 @@ public class DeathBan extends JavaPlugin implements Listener {
             banStorage = YamlConfiguration.loadConfiguration(getBanDBFile());
             banDatabase = (HashMap<String, Long>) banStorage.get("banlist", new HashMap<String, Long>());
         }
-        getLogger().log(Level.INFO, String.format("Loaded %d bans from ban storage", banDatabase.size()));
+        getLogger().log(Level.INFO, String.format("Loaded %d bans from ban storage.", banDatabase.size()));
     }
 
     private void saveBanDB() {
@@ -104,8 +104,9 @@ public class DeathBan extends JavaPlugin implements Listener {
             File banDBFile = getBanDBFile();
             try {
                 banStorage.save(banDBFile);
+                getLogger().log(Level.INFO, "Banlist saved.");
             } catch (IOException ex) {
-                getLogger().log(Level.SEVERE, String.format("Could not save banlist to %s", banDBFile.getName()), ex);
+                getLogger().log(Level.SEVERE, String.format("Could not save banlist to %s!", banDBFile.getName()), ex);
             }
         }
     }
@@ -113,6 +114,7 @@ public class DeathBan extends JavaPlugin implements Listener {
     private void clearBanDB() {
         synchronized (banDatabaseLock) {
             banDatabase = new HashMap<String, Long>();
+            getLogger().log(Level.INFO, "Banlist cleared");
             saveBanDB();
         }
     }
@@ -189,7 +191,7 @@ public class DeathBan extends JavaPlugin implements Listener {
         }
 
         // Calculate seconds
-        if (remainingSeconds > 0) {
+        if (remainingSeconds > 0 || (timeStrings.isEmpty())) {
             if (remainingSeconds > 1) {
                 timeStrings.add(String.format("%d seconds", remainingSeconds));
             } else {
