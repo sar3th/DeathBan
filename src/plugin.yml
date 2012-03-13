@@ -1,3 +1,13 @@
 name: DeathBan
 main: com.github.sar3th.DeathBan.DeathBan
+description: Automatically bans a player after death for a configurable amount of time
 version: 0.1
+author: sar3th
+website: https://github.com/sar3th/DeathBan
+
+commands:
+  db-settime:
+    description: Allows you to set the amount of time that a player is banned for
+    usage: /db-settime [time in seconds]
+    permission: DeathBan.settime
+    permission-message: You are not allowed to edit this value.
