@@ -7,14 +7,21 @@ Development Status
 ------------------
 
 Right now, the plugin is still in early development.
-List of working things:
+Here is a list of working things :)
 
-* Command: db-settime
-* Command: db-ban
+_Commands_:
+
+* db-settime
+* db-ban
+
+_Internal features_:
+
+* killing people
+* setting bantime
 
 Compiling and debugging
 -----------------------
-Create a _lib_ folder and put _bukkit-1.2.3-R0.2.jar_ and _craftbukkit-1.2.3-R0.2.jar_ in it. Then open the project using NetBeans.
+Create a _lib_ folder and put _bukkit-1.2.3-R0.2.jar_ and _craftbukkit-1.2.3-R0.2.jar_ in it, then open the project using NetBeans.
 
 Notes:
 
