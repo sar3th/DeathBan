@@ -11,13 +11,25 @@ Here is a list of working things :)
 
 _Commands_:
 
-* db-settime
-* db-ban
+* db-ban (Manually ban a player)
+* db-clear (Clear the banlist)
+* db-list (Show the banlist)
+* db-reload (Reloads config and banlist)
+* db-settime (Set the autoban time)
+* db-unban (Removes a player from banlist)
 
-_Internal features_:
+_Permissions_:
 
-* killing people
-* setting bantime
+* DeathBan.BanPlayer
+* DeathBan.ClearBans
+* DeathBan.ListBans
+* DeathBan.Reload
+* DeathBan.SetTime
+* DeathBan.UnbanPlayer
+
+_Missing functionality_:
+
+* Bypass plugin for selected players
 
 Compiling and debugging
 -----------------------
