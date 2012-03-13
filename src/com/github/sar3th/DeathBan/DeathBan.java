@@ -80,19 +80,7 @@ public class DeathBan extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("db-settime")) {
-            if (args.length == 1) {
-                int banTime = Integer.parseInt(args[0]);
-
-                getConfig().set("bantime", banTime);
-                getLogger().log(Level.INFO, String.format("%s set bantime to %d", sender.getName(), banTime));
-                saveConfig();
-
-                return true;
-            } else {
-                return false;
-            }
-        } else if (command.getName().equalsIgnoreCase("db-ban")) {
+        if (command.getName().equalsIgnoreCase("db-ban")) {
             if (args.length == 2) {
                 Player victim = getServer().getPlayer(args[0]);
                 long banTime = Integer.parseInt(args[1]);
@@ -143,6 +131,27 @@ public class DeathBan extends JavaPlugin implements Listener {
                 } else {
                     sender.sendMessage(String.format("%s is not banned", targetPlayer));
                 }
+
+                return true;
+            } else {
+                return false;
+            }
+        } else if (command.getName().equalsIgnoreCase("db-reload")) {
+            if (args.length == 0) {
+                reloadConfig();
+                reloadBanDB();
+                
+                return true;
+            } else {
+                return false;
+            }
+        } else if (command.getName().equalsIgnoreCase("db-settime")) {
+            if (args.length == 1) {
+                int banTime = Integer.parseInt(args[0]);
+
+                getConfig().set("bantime", banTime);
+                getLogger().log(Level.INFO, String.format("%s set bantime to %d", sender.getName(), banTime));
+                saveConfig();
 
                 return true;
             } else {
