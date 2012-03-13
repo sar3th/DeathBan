@@ -1,5 +1,6 @@
 package com.github.sar3th.DeathBan;
 
+import java.util.logging.Level;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -39,6 +40,7 @@ public class DeathBan extends JavaPlugin implements Listener {
             if (args.length == 1) {
                 int banTime = Integer.parseInt(args[0]);
                 getConfig().set("bantime", banTime);
+                getLogger().log(Level.INFO, String.format("%s set bantime to %d", sender.getName(), banTime));
                 saveConfig();
                 return true;
             } else {
