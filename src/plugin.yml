@@ -12,6 +12,10 @@ commands:
     permission-message: You are not allowed to ban players because you don't have <permission>.
     usage: "Usage: /<command> <player> <time in seconds>"
   db-clear:
+    description: Clears the banlist.
+    permission: DeathBan.ClearBans
+    permission-message: You are not allowed to clear the banlist because you don't have <permission>.
+    usage: "Usage: /<command>"
   db-list:
     description: Lists the banned players and their remaining bantime.
     permission: DeathBan.ListBans

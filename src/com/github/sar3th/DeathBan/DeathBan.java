@@ -98,6 +98,14 @@ public class DeathBan extends JavaPlugin implements Listener {
             } else {
                 return false;
             }
+        } else if (command.getName().equalsIgnoreCase("db-clear")) {
+            if (args.length == 0) {
+                clearBanDB();
+                
+                return true;
+            } else {
+                return false;
+            }
         } else if (command.getName().equalsIgnoreCase("db-list")) {
             if (args.length == 0) {
                 for (String targetPlayer : banDatabase.keySet()) {
