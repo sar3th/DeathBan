@@ -46,6 +46,15 @@ commands:
         DeathBan.Reload: true
         DeathBan.SetTime: true
         DeathBan.UnbanPlayer: true
+    DeathBan.BanAdmin:
+      description: Gives access to DeathBan's administrative commands.
+      children:
+        DeathBan.BanPlayer: true
+        DeathBan.ClearBans: true
+        DeathBan.ListBans: true
+        DeathBan.Reload: true
+        DeathBan.SetTime: true
+        DeathBan.UnbanPlayer: true
     DeathBan.BanPlayer:
       default: op
       description: Allows players to trigger a DeathBan on other players.
