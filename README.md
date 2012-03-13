@@ -6,12 +6,22 @@ DeathBan is a plugin for Bukkit that automatically bans players after death for 
 Development Status
 ------------------
 
-Right now, the plugin is still in early development. I will add more info as it progresses.
+Right now, the plugin is still in early development.
+List of working things:
+
+* Command: db-settime
+* Command: db-ban
 
 Compiling and debugging
----------
+-----------------------
 Create a _lib_ folder and put _bukkit-1.2.3-R0.2.jar_ and _craftbukkit-1.2.3-R0.2.jar_ in it. Then open the project using NetBeans.
-Note that Bukkit is required for compiling and CraftBukkit is only used for debugging.
+
+Notes:
+
+* Before debugging, run "_Clean and Build_" to automatically copy the jar to the right place.
+* Running _Clean_ will delete the plugin and its settings from the debug folder.
+* Running _Build_ will build the jar and copy it to debug/plugins.
+* Bukkit is required for compiling and CraftBukkit is only used for debugging.
 
 Credits, Greetings and Thanks
 -----------------------------

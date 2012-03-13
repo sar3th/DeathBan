@@ -8,9 +8,14 @@ website: https://github.com/sar3th/DeathBan
 commands:
   db-settime:
     description: Allows you to set the amount of time that a player is banned for after death
-    usage: /db-settime [time in seconds]
+    usage: "Usage: /db-settime [time in seconds]"
     permission: DeathBan.SetTime
     permission-message: You are not allowed to edit this value because you don't have <permission>.
+  db-ban:
+    description: Bans a player for a specified amount of time
+    usage: "Usage: /db-ban [player] [time in seconds]"
+    permission: DeathBan.BanPlayer
+    permission-message: You are not allowed to ban players because you don't have <permission>.
   permissions:  
     DeathBan.*:
       description: Gives access to all DeathBan commands
@@ -19,3 +24,6 @@ commands:
     DeathBan.SetTime:
       default: op
       description: Allows players to set the amount of time that a player is banned for after death
+    DeathBan.BanPlayer:
+      default: op
+      description: Allows players to trigger a DeathBan on other players.
