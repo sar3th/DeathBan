@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +26,7 @@ public class DeathBan extends JavaPlugin implements Listener {
     private FileConfiguration banStorage;
     private HashMap<String, Long> banDatabase;
     private final Integer banDatabaseLock = 31337;
+    private boolean suppressDeathEvents = false;
 
     @Override
     public void onEnable() {
@@ -38,14 +38,35 @@ public class DeathBan extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
         if (isEnabled()) {
-            // TODO: Add code to kick player if he's banned
+            Player joiningPlayer = event.getPlayer();
+            Long banLiftTime = banDatabase.get(joiningPlayer.getName());
+            if (banLiftTime != null) {
+                // Find out if ban is still in effect
+                long rightNow = (System.currentTimeMillis() / 1000);
+                long remainingBanTime = banLiftTime - rightNow;
+                
+                if (remainingBanTime > 0) {
+                    // Player is still banned for some time, kick him
+                    String readableRemainingBanTime = longToReadableTime(remainingBanTime);
+                    String rejoinMessage = getConfig().getString("rejoinmessage").replace("$time", readableRemainingBanTime);
+                    
+                    event.setKickMessage(rejoinMessage);
+                    event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+                    
+                    getLogger().log(Level.INFO, String.format("%s tried to join but is banned for %s.", joiningPlayer.getName(), readableRemainingBanTime));
+                } else {
+                    // Player is not banned anymore
+                    unbanPlayer(joiningPlayer.getName());
+                }
+            } // If player is not banned, do nothing
         }
     }
 
     @EventHandler
-    public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (isEnabled()) {
-            // TODO: Add code to detect player death and add a ban
+    public void onPlayerDeathEvent(PlayerDeathEvent event) {
+        if (isEnabled() && !suppressDeathEvents) {
+            // Someone died :3
+            banPlayer(event.getEntity().getName(), getConfig().getLong("bantime"));
         }
     }
 
@@ -124,9 +145,13 @@ public class DeathBan extends JavaPlugin implements Listener {
 
         if (victim != null) {
             if (!victim.isDead()) {
+                // Ensure that we don't accidentally catch this with our listener
+                suppressDeathEvents = true;
+
                 getServer().getPluginManager().callEvent(new EntityDamageEvent(victim, EntityDamageEvent.DamageCause.SUICIDE, victim.getHealth()));
 
                 victim.damage(victim.getHealth());
+                suppressDeathEvents = false;
                 getLogger().log(Level.INFO, String.format("%s killed by %s", victim.getName(), killerName));
             } else {
                 getLogger().log(Level.INFO, String.format("%s wanted to kill %s but player was already dead", killerName, victim.getName()));
@@ -138,7 +163,7 @@ public class DeathBan extends JavaPlugin implements Listener {
         }
     }
 
-    private void banPlayer(String playerName, int banDuration) {
+    private void banPlayer(String playerName, long banDuration) {
         banPlayer(playerName, banDuration, null);
     }
 
@@ -192,10 +217,10 @@ public class DeathBan extends JavaPlugin implements Listener {
 
         // Calculate seconds
         if (remainingSeconds > 0 || (timeStrings.isEmpty())) {
-            if (remainingSeconds > 1) {
-                timeStrings.add(String.format("%d seconds", remainingSeconds));
-            } else {
+            if (remainingSeconds == 1) {
                 timeStrings.add(String.format("%d second", remainingSeconds));
+            } else {
+                timeStrings.add(String.format("%d seconds", remainingSeconds));
             }
         }
 
@@ -208,7 +233,7 @@ public class DeathBan extends JavaPlugin implements Listener {
             sb.append(timeStrings.get(0));
 
             for (int i = 1; i < (timeStrings.size() - 1); i++) {
-                sb.append(String.format(" %s", timeStrings.get(i)));
+                sb.append(String.format(", %s", timeStrings.get(i)));
             }
 
             sb.append(String.format(" and %s", timeStrings.get(timeStrings.size() - 1)));
@@ -219,6 +244,14 @@ public class DeathBan extends JavaPlugin implements Listener {
         }
     }
 
+    private void unbanPlayer(String playerName) {
+        synchronized (banDatabaseLock) {
+            banDatabase.remove(playerName);
+            saveBanDB();
+        }
+        getLogger().log(Level.INFO, String.format("Unbanned %s", playerName));
+    }
+
     private void banPlayer(String playerName, long banDuration, String senderName) {
         Player player = getServer().getPlayer(playerName);
         String humanReadableTime = longToReadableTime(banDuration);
@@ -227,19 +260,21 @@ public class DeathBan extends JavaPlugin implements Listener {
 
         player.getInventory().clear();
         player.kickPlayer(kickReason);
-        
+
         synchronized (banDatabaseLock) {
             banDatabase.put(player.getName(), banLiftTime);
-        }
-
-        if (senderName == null) {
-            // Player was banned for death
-            getLogger().log(Level.INFO, String.format("%s banned for %s", playerName, humanReadableTime));
-        } else {
-            getLogger().log(Level.INFO, String.format("%s banned %s for %s", senderName, playerName, humanReadableTime));
-            Player sender = getServer().getPlayer(senderName);
-            if (sender != null)
-                sender.sendMessage(String.format("%s is now banned for %s.", senderName, humanReadableTime));
+            if (senderName == null) {
+                // Player was banned for death
+                getLogger().log(Level.INFO, String.format("%s banned for %s", playerName, humanReadableTime));
+            } else {
+                getLogger().log(Level.INFO, String.format("%s banned %s for %s", senderName, playerName, humanReadableTime));
+                
+                // Notify sender
+                Player sender = getServer().getPlayer(senderName);
+                if (sender != null)
+                    sender.sendMessage(String.format("%s is now banned for %s.", senderName, humanReadableTime));
+            }
+            saveBanDB();
         }
     }
 }
