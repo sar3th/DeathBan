@@ -1,0 +1,8 @@
+## Default Configuration for DeathBan
+
+## Time (in seconds) that a player will be banned for after Death
+bantime: 300
+## Message that is displayed as kick reason to the player
+kickmessage: You have died, so you will be unable to play for $time.
+## Message that is displayed as the player rejoins while being banned
+rejoinmessage: You are banned for $time because you have died before.
