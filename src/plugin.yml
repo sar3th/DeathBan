@@ -7,7 +7,7 @@ website: https://github.com/sar3th/DeathBan
 
 commands:
   db-ban:
-    description: Bans a player for a specified amount of time
+    description: Bans a player for a specified amount of time.
     permission: DeathBan.BanPlayer
     permission-message: You are not allowed to ban players because you don't have <permission>.
     usage: "Usage: /<command> <player> <time in seconds>"
@@ -27,28 +27,40 @@ commands:
     permission-message: You are not allowed to reload because you don't have <permission>.
     usage: "Usage: /<command>"
   db-settime:
-    description: Allows you to set the amount of time that a player is banned for after death
+    description: Allows you to set the amount of time that a player is banned for after death.
     permission: DeathBan.SetTime
     permission-message: You are not allowed to edit this value because you don't have <permission>.
     usage: "Usage: /<command> <time in seconds>"
   db-unban:
+    description: Removes a player from the banlist.
+    permission: DeathBan.UnbanPlayer
+    permission-message: You are not allowed to unban players because you don't have <permission>.
+    usage: "Usage: /<command> <player>"
   permissions:
     DeathBan.*:
       description: Gives access to all DeathBan commands
       children:
         DeathBan.BanPlayer: true
+        DeathBan.ClearBans: true
         DeathBan.ListBans: true
         DeathBan.Reload: true
         DeathBan.SetTime: true
+        DeathBan.UnbanPlayer: true
     DeathBan.BanPlayer:
       default: op
       description: Allows players to trigger a DeathBan on other players.
+    DeathBan.ClearBans:
+      default: op
+      description: Allows players to clear the banlist.
     DeathBan.ListBans:
       default: true
-      description: Allows palyers to see the list of banned players.
+      description: Allows players to see the list of banned players.
     DeathBan.Reload:
       default: op
       description: Allows players to reload the configuration and banlist.
     DeathBan.SetTime:
       default: op
-      description: Allows players to set the amount of time that a player is banned for after death
+      description: Allows players to set the amount of time that a player is banned for after death.
+    DeathBan.UnbanPlayer:
+      default: op
+      description: Allows players to unban players.
