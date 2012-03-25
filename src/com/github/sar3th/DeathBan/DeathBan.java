@@ -102,6 +102,7 @@ public class DeathBan extends JavaPlugin implements Listener {
         } else if (command.getName().equalsIgnoreCase("db-clear")) {
             if (args.length == 0) {
                 clearBanDB();
+                sender.sendMessage("Banlist cleared.");
 
                 return true;
             } else {
