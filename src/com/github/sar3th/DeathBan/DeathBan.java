@@ -175,21 +175,27 @@ public class DeathBan extends JavaPlugin implements Listener {
             }
         } else if (command.getName().equalsIgnoreCase("db-unban")) {
             if (args.length == 1) {
-                Player player = getServer().getPlayer(args[0]);
-                String targetPlayer;
-                
-                if (player == null) {
-                    targetPlayer = args[0];
-                } else {
-                    targetPlayer = player.getName();
-                }
+                String targetPlayer = args[0];
                 
                 Long bantime = banDatabase.get(targetPlayer.toLowerCase());
                 if (bantime != null) {
                     unbanPlayer(targetPlayer);
                     sender.sendMessage(String.format("%s has been unbanned.", targetPlayer));
                 } else {
-                    sender.sendMessage(String.format("%s is not banned.", targetPlayer));
+                    Player tempPlayer = getServer().getPlayer(targetPlayer);
+                    
+                    if (tempPlayer != null) {
+                        bantime = banDatabase.get(tempPlayer.getName().toLowerCase());
+                        
+                        if (bantime != null) {
+                            unbanPlayer(tempPlayer.getName());
+                            sender.sendMessage(String.format("%s has been unbanned.", targetPlayer));
+                        } else {
+                            sender.sendMessage(String.format("Neither %s nor %s is banned.", targetPlayer, tempPlayer.getName()));
+                        }
+                    } else {
+                        sender.sendMessage(String.format("%s is not banned.", targetPlayer));
+                    }
                 }
                 
                 return true;
