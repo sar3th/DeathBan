@@ -362,7 +362,10 @@ public class DeathBan extends JavaPlugin implements Listener {
         }
 
         synchronized (banDatabaseLock) {
-            banDatabase.put(playerName.toLowerCase(), banLiftTime);
+            if (player != null)
+                banDatabase.put(player.getName().toLowerCase(), banLiftTime);
+            else
+                banDatabase.put(playerName.toLowerCase(), banLiftTime);
             if (senderName == null) {
                 // Player was banned for death
                 getLogger().log(Level.INFO, String.format("%s and is banned for %s", reason, humanReadableTime));
