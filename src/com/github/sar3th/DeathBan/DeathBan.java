@@ -110,25 +110,31 @@ public class DeathBan extends JavaPlugin implements Listener {
             }
         } else if (command.getName().equalsIgnoreCase("db-list")) {
             if (args.length == 0) {
-                if (banDatabase.isEmpty()) {
-                    sender.sendMessage("The banlist is empty! :)");
-                    
-                    return true;
-                } else {
-                    for (String targetPlayer : banDatabase.keySet()) {
-                        long remainingTime = banDatabase.get(targetPlayer.toLowerCase()) - (System.currentTimeMillis() / 1000);
+                ArrayList<String> banMessages = new ArrayList<String>(banDatabase.size());
+                
+                for (String targetPlayer : banDatabase.keySet()) {
+                    long remainingTime = banDatabase.get(targetPlayer.toLowerCase()) - (System.currentTimeMillis() / 1000);
 
-                        if (remainingTime > 0) {
-                            String readableRemainingTime = longToReadableTime(remainingTime);
-                            sender.sendMessage(String.format("%s is banned for %s", targetPlayer, readableRemainingTime));
-                        } else {
-                            // Ban can be lifted
-                            unbanPlayer(targetPlayer);
-                        }
+                    if (remainingTime > 0) {
+                        String readableRemainingTime = longToReadableTime(remainingTime);
+                        banMessages.add(String.format("%s is banned for %s", targetPlayer, readableRemainingTime));
+                    } else {
+                        // Ban can be lifted
+                        unbanPlayer(targetPlayer);
                     }
-
-                    return true;
                 }
+                
+                if (banMessages.isEmpty()) {
+                    sender.sendMessage("The banlist is empty! :)");
+                } else {
+                    for (String banMessage: banMessages) {
+                        sender.sendMessage(banMessage);
+                    }
+                }
+                
+                saveBanDB();
+
+                return true;
             } else if (args.length == 1) {
                 String targetPlayer = args[0];
                 Long banLiftTime = banDatabase.get(targetPlayer.toLowerCase());
