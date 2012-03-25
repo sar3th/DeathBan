@@ -110,18 +110,15 @@ public class DeathBan extends JavaPlugin implements Listener {
             }
         } else if (command.getName().equalsIgnoreCase("db-list")) {
             if (args.length == 0) {
+                updateDB();
+                
                 ArrayList<String> banMessages = new ArrayList<String>(banDatabase.size());
                 
                 for (String targetPlayer : banDatabase.keySet()) {
                     long remainingTime = banDatabase.get(targetPlayer.toLowerCase()) - (System.currentTimeMillis() / 1000);
 
-                    if (remainingTime > 0) {
-                        String readableRemainingTime = longToReadableTime(remainingTime);
-                        banMessages.add(String.format("%s is banned for %s", targetPlayer, readableRemainingTime));
-                    } else {
-                        // Ban can be lifted
-                        unbanPlayer(targetPlayer);
-                    }
+                    String readableRemainingTime = longToReadableTime(remainingTime);
+                    banMessages.add(String.format("%s is banned for %s", targetPlayer, readableRemainingTime));
                 }
                 
                 if (banMessages.isEmpty()) {
@@ -131,25 +128,19 @@ public class DeathBan extends JavaPlugin implements Listener {
                         sender.sendMessage(banMessage);
                     }
                 }
-                
-                saveBanDB();
 
                 return true;
             } else if (args.length == 1) {
+                updateDB();
+                
                 String targetPlayer = args[0];
                 Long banLiftTime = banDatabase.get(targetPlayer.toLowerCase());
 
                 if (banLiftTime != null) {
                     long remainingTime = banLiftTime - (System.currentTimeMillis() / 1000);
 
-                    if (remainingTime > 0) {
-                        String readableRemainingTime = longToReadableTime(remainingTime);
-                        sender.sendMessage(String.format("%s is banned for %s", targetPlayer, readableRemainingTime));
-                    } else {
-                        // Ban can be lifted
-                        unbanPlayer(targetPlayer);
-                        sender.sendMessage(String.format("%s is not banned", targetPlayer));
-                    }
+                    String readableRemainingTime = longToReadableTime(remainingTime);
+                    sender.sendMessage(String.format("%s is banned for %s", targetPlayer, readableRemainingTime));
                 } else {
                     sender.sendMessage(String.format("%s is not banned", targetPlayer));
                 }
@@ -191,13 +182,39 @@ public class DeathBan extends JavaPlugin implements Listener {
             } else {
                 return false;
             }
+        } else if (command.getName().equalsIgnoreCase("db-update")) {
+            updateDB();
+            
+            sender.sendMessage("Database update complete");
+            return true;
         } else {
             return false;
         }
     }
-
+    
     private File getBanDBFile() {
         return new File(getDataFolder(), "bans.yml");
+    }
+    
+    private void updateDB() {
+        int oldBans = banDatabase.size();
+        
+        for (String targetPlayer: banDatabase.keySet()) {
+            Long banLiftTime = banDatabase.get(targetPlayer);
+
+            if (banLiftTime != null) {
+                long remainingTime = banLiftTime - (System.currentTimeMillis() / 1000);
+
+                if (remainingTime <= 0) {
+                    // Ban can be lifted
+                    unbanPlayer(targetPlayer);
+                }
+            } else {
+                getLogger().log(Level.SEVERE, String.format("An error occurred while checking %s's ban.", targetPlayer));
+            }
+        }
+        
+        getLogger().log(Level.INFO, String.format("Database maintenance complete, removed %d bans.", banDatabase.size() - oldBans));
     }
 
     private void reloadBanDB() {
@@ -221,6 +238,7 @@ public class DeathBan extends JavaPlugin implements Listener {
             }
         }
         getLogger().log(Level.INFO, String.format("Loaded %d bans from ban storage.", banDatabase.size()));
+        updateDB();
     }
 
     private void saveBanDB() {

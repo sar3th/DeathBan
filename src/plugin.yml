@@ -36,6 +36,11 @@ commands:
     permission: DeathBan.UnbanPlayer
     permission-message: You are not allowed to unban players because you don't have <permission>.
     usage: "Usage: /<command> <player>"
+  db-update:
+    description: Updates the banlist.
+    permission: DeathBan.Update
+    permission-message: You are not allowed to update the banlist because you don't have <permission>.
+    usage: "Usage: /<command>"
   permissions:
     DeathBan.*:
       description: Gives access to all DeathBan commands
@@ -46,6 +51,7 @@ commands:
         DeathBan.Reload: true
         DeathBan.SetTime: true
         DeathBan.UnbanPlayer: true
+        DeathBan.Update: true
     DeathBan.BanAdmin:
       description: Gives access to DeathBan's administrative commands.
       children:
@@ -55,6 +61,7 @@ commands:
         DeathBan.Reload: true
         DeathBan.SetTime: true
         DeathBan.UnbanPlayer: true
+        DeathBan.Update: true
     DeathBan.BanPlayer:
       default: op
       description: Allows players to trigger a DeathBan on other players.
@@ -73,3 +80,6 @@ commands:
     DeathBan.UnbanPlayer:
       default: op
       description: Allows players to unban players.
+    DeathBan.Update:
+      default: true
+      description: Allows players to update the banlist.
