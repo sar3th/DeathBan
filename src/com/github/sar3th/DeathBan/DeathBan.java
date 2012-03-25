@@ -156,6 +156,7 @@ public class DeathBan extends JavaPlugin implements Listener {
             if (args.length == 0) {
                 reloadConfig();
                 reloadBanDB();
+                sender.sendMessage("Reloaded banlist");
 
                 return true;
             } else {
