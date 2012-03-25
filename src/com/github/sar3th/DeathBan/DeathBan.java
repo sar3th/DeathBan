@@ -169,6 +169,8 @@ public class DeathBan extends JavaPlugin implements Listener {
                 getConfig().set("bantime", banTime);
                 getLogger().log(Level.INFO, String.format("%s set bantime to %d", sender.getName(), banTime));
                 saveConfig();
+                
+                sender.sendMessage(String.format("Bantime was set to %s.", banTime));
 
                 return true;
             } else {
