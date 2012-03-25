@@ -214,7 +214,7 @@ public class DeathBan extends JavaPlugin implements Listener {
             }
         }
         
-        getLogger().log(Level.INFO, String.format("Database maintenance complete, removed %d bans.", banDatabase.size() - oldBans));
+        getLogger().log(Level.INFO, String.format("Database maintenance complete, removed %d bans.", oldBans - banDatabase.size()));
     }
 
     private void reloadBanDB() {
