@@ -381,7 +381,11 @@ public class DeathBan extends JavaPlugin implements Listener {
                 // Notify sender
                 Player sender = getServer().getPlayer(senderName);
                 if (sender != null) {
-                    sender.sendMessage(String.format("%s is now banned for %s.", player.getName(), humanReadableTime));
+                    if (player != null) {
+                        sender.sendMessage(String.format("%s is now banned for %s.", player.getName(), humanReadableTime));
+                    } else {
+                        sender.sendMessage(String.format("%s is now banned for %s.", playerName, humanReadableTime));
+                    }
                 }
             }
             saveBanDB();
