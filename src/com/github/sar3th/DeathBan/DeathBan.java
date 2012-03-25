@@ -175,6 +175,7 @@ public class DeathBan extends JavaPlugin implements Listener {
         } else if (command.getName().equalsIgnoreCase("db-unban")) {
             if (args.length == 1) {
                 unbanPlayer(args[0]);
+                sender.sendMessage(String.format("%s has been unbanned.", args[0]));
 
                 return true;
             } else {
